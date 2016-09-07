@@ -1,0 +1,94 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TUI">
+    <BooleanToVisibilityConverter x:Key="booleanToVisibiltyConverter" x:Shared="True"/>
+    <Style TargetType="{x:Type local:Window}">
+        <Setter Property="Background" Value="DarkBlue"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome GlassFrameThickness="0" CornerRadius="0" ResizeBorderThickness="8"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Window}">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                            Margin="0">
+                            <Border
+                                Name="OuterBorder"
+	                            BorderBrush="{TemplateBinding BorderBrush}"
+	                            BorderThickness="1"
+	                            HorizontalAlignment="Stretch"
+	                            Margin="2,9,2,2"
+	                            VerticalAlignment="Stretch">
+                                <Border
+                                    Name="InnerBorder"
+		                            BorderBrush="{TemplateBinding BorderBrush}"
+		                            BorderThickness="1"
+		                            Margin="2">
+                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="2,10,2,2"/>
+                                </Border>
+                            </Border>
+                        </Border>
+                        <Border Name="TitleBorder" Background="{TemplateBinding Background}" Margin="0,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title}" 
+                               FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" FontWeight="Normal" Foreground="{TemplateBinding Foreground}" Margin="8,0,8,0" />
+                        </Border>
+                        <TextBlock Name="SystemButton" Foreground="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Margin="16,1,0,0" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Width="24" Height="16" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Run>[</Run><Run Foreground="GreenYellow">▪</Run><Run>]</Run>
+                        </TextBlock>
+                        <TextBlock Name="MinimiseButton" Foreground="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Margin="0,1,80,0" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Width="24" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="True" WindowChrome.IsHitTestVisibleInChrome="True" Visibility="{TemplateBinding IsMinimizeVisible, Converter={StaticResource booleanToVisibiltyConverter}}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{x:Static SystemCommands.MinimizeWindowCommand}"/>
+                            </TextBlock.InputBindings>
+                            <Run>[</Run><Run Foreground="GreenYellow">▁</Run><Run>]</Run>
+                        </TextBlock>
+                        <TextBlock Name="RestoreButton" Foreground="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Margin="0,1,48,0" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Width="24" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="True" WindowChrome.IsHitTestVisibleInChrome="True" Visibility="Collapsed">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{x:Static SystemCommands.RestoreWindowCommand}"/>
+                            </TextBlock.InputBindings>
+                            <Run>[</Run><Run Foreground="GreenYellow">=</Run><Run>]</Run>
+                        </TextBlock>
+                        <TextBlock Name="MaximizeButton" Foreground="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Margin="0,1,48,0" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Width="24" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="True" WindowChrome.IsHitTestVisibleInChrome="True">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{x:Static SystemCommands.MaximizeWindowCommand}"/>
+                            </TextBlock.InputBindings>
+                            <Run>[</Run><Run Foreground="GreenYellow">↕</Run><Run>]</Run>
+                        </TextBlock>
+                        <TextBlock Name="CloseButton" Foreground="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Margin="0,1,16,0" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Width="24" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="True" WindowChrome.IsHitTestVisibleInChrome="True" Visibility="{TemplateBinding IsCloseVisible, Converter={StaticResource booleanToVisibiltyConverter}}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                            </TextBlock.InputBindings>
+                            <Run>[</Run><Run Foreground="Red">x</Run><Run>]</Run>
+                        </TextBlock>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Normal">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="RestoreButton" />
+                            <Setter Property="Visibility" Value="{Binding IsMaximiseRestoreVisible, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource booleanToVisibiltyConverter}}" TargetName="MaximizeButton" />
+                            <Setter Property="Margin" Value="2,9,2,2" TargetName="OuterBorder"/>
+                            <Setter Property="Margin" Value="0,4,0,0" TargetName="TitleBorder"/>
+                            <Setter Property="Margin" Value="16,1,0,0" TargetName="SystemButton"/>
+                            <Setter Property="Margin" Value="0,1,80,0" TargetName="MinimiseButton"/>
+                            <Setter Property="Margin" Value="0,1,48,0" TargetName="MaximizeButton"/>
+                            <Setter Property="Margin" Value="0,1,16,0" TargetName="CloseButton"/>
+                        </Trigger>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter Property="Visibility" Value="{Binding IsMaximiseRestoreVisible, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource booleanToVisibiltyConverter}}" TargetName="RestoreButton" />
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="MaximizeButton" />
+                            <Setter Property="Margin" Value="0,16,0,0" TargetName="OuterBorder"/>
+                            <Setter Property="Margin" Value="0,11,0,0" TargetName="TitleBorder"/>
+                            <Setter Property="Margin" Value="16,8,0,0" TargetName="SystemButton"/>
+                            <Setter Property="Margin" Value="0,8,80,0" TargetName="MinimiseButton"/>
+                            <Setter Property="Margin" Value="0,8,48,0" TargetName="RestoreButton"/>
+                            <Setter Property="Margin" Value="0,8,16,0" TargetName="CloseButton"/>
+                         </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

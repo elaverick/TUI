@@ -1,0 +1,283 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TUI">
+
+    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}"
+       TargetType="{x:Type local:Separator}">
+        <Setter Property="Height" Value="8"/>
+        <Setter Property="Margin" Value="0,4,0,4"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Separator}">
+                    <TextBlock Text="Separator"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- TopLevelHeader -->
+    <ControlTemplate x:Key="{x:Static MenuItem.TopLevelHeaderTemplateKey}"
+                 TargetType="{x:Type local:MenuItem}">
+        <ControlTemplate.Resources>
+            <local:HighlightConverter x:Key="Highligher"/>
+        </ControlTemplate.Resources>
+        <Border Name="Border" >
+            <Grid>
+                <TextBlock
+        Name="HeaderHost"
+        Margin="6,3,6,3"
+        FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Foreground="Black">
+					<local:TextBlockEx.FormattedText>
+						<MultiBinding Converter="{StaticResource Highligher}">
+							<Binding Path="Header" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+							<Binding Path="HighlightColor" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+						</MultiBinding>
+					</local:TextBlockEx.FormattedText>
+                </TextBlock>
+                <Popup 
+        Name="Popup"
+        Placement="Bottom"
+        IsOpen="{TemplateBinding IsSubmenuOpen}"
+        AllowsTransparency="True" 
+        Focusable="False"
+        PopupAnimation="None">
+                    <Border Margin="0,0,8,8">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="0" ShadowDepth="8"/>
+                        </Border.Effect>
+                        <Border 
+          Name="SubmenuBorder"
+          SnapsToDevicePixels="True"
+          Background="LightGray"
+          BorderBrush="Gray"
+          BorderThickness="1">
+                            <Border
+	                            BorderBrush="Gray"
+	                            BorderThickness="1"
+	                            HorizontalAlignment="Stretch"
+	                            Margin="2"
+	                            VerticalAlignment="Stretch">
+                                <StackPanel  
+            IsItemsHost="True" 
+            KeyboardNavigation.DirectionalNavigation="Cycle" />
+                            </Border>
+                        </Border>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+                <Setter TargetName="Popup" Property="PopupAnimation" Value="None"/>
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="true">
+                <Setter TargetName="Border" Property="Background"
+              Value="DarkGray"/>
+                <Setter TargetName="Border" Property="BorderBrush"
+              Value="Transparent"/>
+            </Trigger>
+            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="True">
+                <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,0,0,3"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <!-- TopLevelItem -->
+
+    <ControlTemplate 
+  x:Key="{x:Static MenuItem.TopLevelItemTemplateKey}" 
+  TargetType="{x:Type local:MenuItem}">
+        <ControlTemplate.Resources>
+            <local:HighlightConverter x:Key="Highligher"/>
+        </ControlTemplate.Resources>
+        <Border Name="Border">
+            <Grid>
+                <TextBlock
+        Name="HeaderHost"
+        Margin="6,3,6,3"
+        FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Foreground="Black">
+					<local:TextBlockEx.FormattedText>
+						<MultiBinding Converter="{StaticResource Highligher}">
+							<Binding Path="Header" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+							<Binding Path="HighlightColor" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+						</MultiBinding>
+					</local:TextBlockEx.FormattedText>
+                </TextBlock>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="true">
+                <Setter TargetName="Border" Property="Background"
+              Value="DarkGray"/>
+                <Setter TargetName="Border" Property="BorderBrush" Value="Transparent"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground"
+              Value="LightGray"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- SubmenuItem -->
+
+    <ControlTemplate 
+  x:Key="{x:Static MenuItem.SubmenuItemTemplateKey}" 
+  TargetType="{x:Type local:MenuItem}">
+        <ControlTemplate.Resources>
+            <local:HighlightConverter x:Key="Highligher"/>
+        </ControlTemplate.Resources>
+        <Border Name="Border">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut"/>
+                    <ColumnDefinition Width="16"/>
+                </Grid.ColumnDefinitions>
+                <Border 
+                    Name="Check"  
+                    Grid.Column="2"
+                    Visibility="Collapsed"
+                    Background="Transparent">
+                    <TextBlock Name="CheckMark" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Visibility="Hidden" Foreground="Black">☑</TextBlock>
+                </Border>
+                <TextBlock
+                    Name="HeaderHost"
+                    Grid.Column="0"
+                                Margin="8,0,0,0"
+                    FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Foreground="Black"
+                    >
+					<local:TextBlockEx.FormattedText>
+						<MultiBinding Converter="{StaticResource Highligher}">
+							<Binding Path="Header" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+							<Binding Path="HighlightColor" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+						</MultiBinding>
+					</local:TextBlockEx.FormattedText>
+                </TextBlock>
+                <TextBlock x:Name="InputGestureText" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Foreground="Black"
+                    Grid.Column="1"
+                    Text="{TemplateBinding InputGestureText}"
+                    Margin="5,2,0,2"
+                    DockPanel.Dock="Right" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="true">
+                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsCheckable" Value="true">
+                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="true">
+                <Setter TargetName="Border" Property="Background"
+              Value="Green"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- SubmenuHeader -->
+
+    <ControlTemplate 
+  x:Key="{x:Static MenuItem.SubmenuHeaderTemplateKey}" 
+  TargetType="{x:Type local:MenuItem}">
+        <ControlTemplate.Resources>
+            <local:HighlightConverter x:Key="Highligher"/>
+        </ControlTemplate.Resources>
+        <Border Name="Border" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut"/>
+                    <ColumnDefinition Width="13"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock
+        Name="HeaderHost"
+        Grid.Column="0"
+        Margin="8,0,0,0"
+        FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Foreground="Black">
+					<local:TextBlockEx.FormattedText>
+						<MultiBinding Converter="{StaticResource Highligher}">
+							<Binding Path="Header" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+							<Binding Path="HighlightColor" RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+						</MultiBinding>
+					</local:TextBlockEx.FormattedText>
+                </TextBlock>
+                <TextBlock x:Name="InputGestureText" FontFamily="Fixedsys Excelsior 3.01" FontSize="16px" Foreground="Black"
+        Grid.Column="1"
+        Text="{TemplateBinding InputGestureText}"
+        Margin="5,2,2,2"
+        DockPanel.Dock="Right"/>
+                <Popup 
+        Name="Popup"
+        Placement="Right"
+        HorizontalOffset="-8" 
+        IsOpen="{TemplateBinding IsSubmenuOpen}"
+        AllowsTransparency="True" 
+        Focusable="False"
+        PopupAnimation="None">
+                    <Border Margin="0,0,8,8">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="0" ShadowDepth="8"/>
+                        </Border.Effect>
+                        <Border 
+          Name="SubmenuBorder"
+          SnapsToDevicePixels="True"
+          Background="LightGray">
+                            <Border
+	                            BorderBrush="Gray"
+	                            BorderThickness="1"
+	                            HorizontalAlignment="Stretch"
+	                            Margin="2,0"
+	                            VerticalAlignment="Stretch">
+                                <StackPanel  
+            IsItemsHost="True" 
+            KeyboardNavigation.DirectionalNavigation="Cycle" >
+                                </StackPanel>
+                            </Border>
+                        </Border>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="true">
+                <Setter TargetName="Border" Property="Background"
+              Value="Green"/>
+            </Trigger>
+            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="True">
+                <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,3,0,3"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- MenuItem Style -->
+
+    <Style x:Key="{x:Type local:MenuItem}" TargetType="{x:Type local:MenuItem}">
+        <Style.Triggers>
+            <Trigger Property="Role" Value="TopLevelHeader">
+                <Setter Property="Template"
+              Value="{StaticResource {x:Static MenuItem.TopLevelHeaderTemplateKey}}"/>
+                <Setter Property="Grid.IsSharedSizeScope" Value="true"/>
+            </Trigger>
+            <Trigger Property="Role" Value="TopLevelItem">
+                <Setter Property="Template"
+              Value="{StaticResource {x:Static MenuItem.TopLevelItemTemplateKey}}"/>
+            </Trigger>
+            <Trigger Property="Role" Value="SubmenuHeader">
+                <Setter Property="Template"
+              Value="{StaticResource {x:Static MenuItem.SubmenuHeaderTemplateKey}}"/>
+            </Trigger>
+            <Trigger Property="Role" Value="SubmenuItem">
+                <Setter Property="Template"
+              Value="{StaticResource {x:Static MenuItem.SubmenuItemTemplateKey}}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
